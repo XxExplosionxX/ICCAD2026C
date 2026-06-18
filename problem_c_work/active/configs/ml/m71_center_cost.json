@@ -1,0 +1,20 @@
+{
+  "run_name": "m71_center_cost",
+  "data_path": ".",
+  "epochs": 20,
+  "batch_size": 32,
+  "train_samples": 16384,
+  "val_samples": 256,
+  "lr": 0.001,
+  "hidden_dim": 192,
+  "depth": 4,
+  "dropout": 0.1,
+  "center_weight": 1.0,
+  "cost_weight": 0.2,
+  "log_interval": 10,
+  "device": "cuda",
+  "cuda_index": 0,
+  "amp": true,
+  "checkpoint_dir": "problem_c_work/artifacts/checkpoints/ml",
+  "result_dir": "problem_c_work/artifacts/results/ml"
+}

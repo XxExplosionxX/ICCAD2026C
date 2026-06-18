@@ -1,0 +1,44 @@
+# =========================
+# WINDOWS: PUSH TO SERVER
+# =========================
+
+tar -czf E:\Project\iccad2026C\m7_push.tar.gz -C E:\Project\iccad2026C problem_c_work\active\models\ml problem_c_work\active\scripts\ml problem_c_work\active\configs\ml problem_c_work\active\contest problem_c_work\docs\milestones\ml
+scp E:\Project\iccad2026C\m7_push.tar.gz <user>@<server>:/path/to/cad2026/
+
+
+# =========================
+# LINUX SERVER: UNPACK
+# =========================
+
+cd /path/to/cad2026
+tar -xzf m7_push.tar.gz
+
+
+# =========================
+# LINUX SERVER: TRAIN
+# =========================
+
+cd /path/to/cad2026/problem_c_work
+
+# Important: run current M7.2 training with CUDA in background
+nohup /path/to/python -u active/scripts/ml/train_m72_example.py --device cuda --cuda-index 0 --amp --data-path /path/to/repo-root --epochs 20 --batch-size 32 --train-samples 16384 --val-samples 256 --center-weight 1.0 --cost-weight 0.2 --num-workers 4 --pin-memory --persistent-workers --prefetch-factor 2 --checkpoint-dir artifacts/checkpoints/ml --result-dir artifacts/results/ml --log-interval 10 --run-name m72_example >& artifacts/results/ml/m72_example.log &
+
+ps -fu $USER | grep train_m72_example.py
+tail -f artifacts/results/ml/m72_example.log
+nvidia-smi
+
+
+# =========================
+# LINUX SERVER: PACK RESULTS
+# =========================
+
+cd /path/to/cad2026/problem_c_work
+tar -czf /path/to/cad2026/m7_pull.tar.gz artifacts/checkpoints/ml artifacts/results/ml docs/milestones/ml
+
+
+# =========================
+# WINDOWS: PULL FROM SERVER
+# =========================
+
+scp <user>@<server>:/path/to/cad2026/m7_pull.tar.gz E:\Project\iccad2026C\
+tar -xzf E:\Project\iccad2026C\m7_pull.tar.gz -C E:\Project\iccad2026C\problem_c_work

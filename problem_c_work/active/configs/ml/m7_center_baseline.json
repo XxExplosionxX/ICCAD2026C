@@ -1,0 +1,14 @@
+{
+  "run_name": "m7_center_baseline",
+  "data_path": ".",
+  "epochs": 5,
+  "batch_size": 4,
+  "train_samples": 128,
+  "val_samples": 8,
+  "lr": 0.001,
+  "hidden_dim": 128,
+  "depth": 3,
+  "dropout": 0.1,
+  "checkpoint_dir": "problem_c_work/artifacts/checkpoints/ml",
+  "result_dir": "problem_c_work/artifacts/results/ml"
+}

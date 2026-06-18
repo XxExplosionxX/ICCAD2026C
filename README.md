@@ -1,247 +1,64 @@
-### FloorSet - a VLSI Floorplanning Dataset with Design Constraints of Real-World SoCs
+# ICCAD 2026 Problem C Workspace
 
-## ICCAD 2026 Contest
+這個 repository 現在是拿來做 ICCAD 2026 Problem C 比賽準備、solver 開發、和本地驗證的工作樹，不再把 repo 根目錄當成原始 FloorSet 專案首頁。
 
-FloorSet is the basis for the **ICCAD 2026 CAD Contest Problem C, The FloorSet Challenge: Data-Driven SoC Floorplanning**.
+## 你現在會用到的區塊
 
-> **Contest participants:** Please refer to the [contest README](./iccad2026contest/README.md) for the authoritative getting started guide, constraint definitions, scoring details, and changelog. This top-level README covers the broader FloorSet dataset.
+- `problem_c_work/`
+  - 主要研究工作區
+  - 已整理成 `active/`、`archive/`、`artifacts/`、`docs/`
+- `iccad2026contest/`
+  - 官方 contest framework 參考版本
+- `.official-reference/`
+  - 完整 upstream 參考工作樹
+- `LiteTensorDataTest/`
+  - 本地 validation dataset
 
-**Contest webpage:** https://www.iccad-contest.org/Problems.html
+如果你要看目前工作區的細節，請先讀 [problem_c_work/README.md](problem_c_work/README.md)。
 
-**Contest specification (PDF):** [FloorplanningContest_ICCAD_2026_v10.pdf](./iccad2026contest/FloorplanningContest_ICCAD_2026_v10.pdf)
+## Repo 定位
 
-### Contest Datasets
+這份 repo 的用途是：
 
-| Dataset | Samples | Purpose | Available |
-|---------|---------|---------|-----------|
-| **Training** | 1M | Train ML models | Yes (`LiteTensorData/`) |
-| **Validation** | 100 | Local evaluation | Yes (`LiteTensorDataTest/`) |
-| **Test** | 100 | Final ranking | Hidden |
+1. 保留官方 contest 相關內容當基準
+2. 提供你們自己的 active solver / evaluator / ML 工作區
+3. 讓你們之後仍然可以抓 upstream 更新來比對
 
-All datasets contain floorplans with **21 to 120 blocks**.
+這份 repo **不是** 在根目錄直接延續官方 FloorSet README 的使用方式。
 
-### Quick Start
+## 目前建議入口
+
+本地驗證 packaged solver：
 
 ```bash
-cd iccad2026contest/
-cp optimizer_template.py my_optimizer.py
-# Implement your algorithm in my_optimizer.py
-python iccad2026_evaluate.py --evaluate my_optimizer.py
+python problem_c_work/active/contest/iccad2026_evaluate.py --validate problem_c_work/active/solvers/final_solver.py --data-path .
 ```
 
-### Contest Infrastructure
+本地評估 active M4.7 solver：
 
-The contest framework is in [`iccad2026contest/`](./iccad2026contest/):
-- `iccad2026_evaluate.py` - Evaluation framework with auto-download dataloaders
-- `optimizer_template.py` - B*-tree SA baseline (replace with your algorithm)
-- `training_example.py` - Differentiable training loss example
-- `README.md` - Detailed getting started guide
-
-### Data Access
-
-```python
-from iccad2026_evaluate import get_training_dataloader, get_validation_dataloader
-
-# Training data (1M samples) - auto-downloads from Hugging Face
-train_loader = get_training_dataloader(batch_size=1, num_samples=1000)
-
-# Validation data (100 samples) - auto-downloads from Hugging Face  
-val_loader = get_validation_dataloader(batch_size=1)
+```bash
+python problem_c_work/active/contest/iccad2026_evaluate.py --evaluate problem_c_work/active/solvers/m47/solver_m47.py --test-id 0 --data-path . --output solver_m47_check.json
 ```
 
----
+查看工作區說明：
 
-## Overview 
-
-FloorSet contains 2 MILLION floorplan benchmark circuits. These circuits reflect real-world constraints and objectives of the Floorplanning problem at SoC and sub-system hierarchies, which is a crucial component of the physical design flow. This dataset contains synthetic fixed-outline floorplan layouts in PyTorch tensor format.
-
-
-<p align="center">
-  <img src="images/test_layouts_noconst.gif" alt="GIF 0">
-</p>
-
-
-
-
-FloorSet is composed of two datasets:
-1. **FloorSet-Prime** (1M layouts)
-2. **FloorSet-Lite** (1M layouts)
-
-*Each dataset includes 1M training samples, with hard constraints seen in modern design flows such as shape constraints, boundary constraints, grouping constraints, multi-instantiation blocks, fixed and pre-placement constraints. We also propose 100 testcases for the purpose of validating floorplanning algorithms.* 
-
-FloorSet is intended to spur fundamental research on large-scale constrained optimization problems and alleviates the core issue of reproducibility in modern ML-driven solutions to such problems. FloorSet has the potential to be “the Floorplanning” benchmark for the academic research community and can speed up research in this domain. All data in FloorSet is synthetically generated based on an algorithm designed by us, with no external input.
-
-
-<p align="center">
-  <img src="images/primeflow.png" height=300>
-</p>
-
-### Example layouts from FloorSet-Prime dataset
-| ![Image 1](images/primelayout21.png) <br> An example FloorSet-Prime layout with 21 partitions | ![Image 2](images/primelayout120.png) <br> An example FloorSet-Prime layout with 120 partitions |
-|:--------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|
-
-
-
-### Example layouts from FloorSet-Lite dataset
-| ![Image 1](images/litelayout23.png) <br> An example FloorSet-Lite layout with 21 partitions | ![Image 2](images/litelayout120.png) <br> An example FloorSet-Lite layout with 120 partitions |
-|:--------------------------------------------------------------------------------------------:|:--------------------------------------------------------------------------------------------:|
-
-
-### Layout distribution
-| ![Image 5](images/prime_histogram.png) FloorSet-Prime benchmark distribution | ![Image 6](images/lite_histogram.png) FloorSet-Lite benchmark distribution |
-|:--:|:--:|
-
-
-
-## Prerequisites
-
-- **Required Storage for Dataset:** 35 GB.
-- **Prime Dataset:** 
-  - Approximately 15 GB will be downloaded, expanding to around 25 GB when decompressed.
-- **Lite Dataset:** 
-  - Approximately 6.1 GB will be downloaded, expanding to around 9.5 GB when decompressed.
-
-
-- ** Dependencies can be installed using pip:
-
-```sh
-pip install -r requirements.txt
+```bash
+Get-Content problem_c_work/README.md
 ```
 
+## 資料集假設
 
-## Loading the data
+- 目前 repo 根目錄已有 `LiteTensorDataTest/`，所以 validation 類流程可跑
+- 如果要跑 ML training，還需要在 repo 根目錄放 `LiteTensorData/`
+- active scripts 預設把 `--data-path` 視為 repo 根目錄
 
-To load the dataset, 
-1.  **Dataloader codes:** To load the datasets and iterate, use **primeLoader.py** and **liteLoader.py**. 
-(Avoid shuffling by setting shuffle=False in the DataLoader), as it can lead to slower data loading times)
-2.  **Validator code:** To report metrics for a floorplan solution, use *estimate_cost* in **validate.py**.
-3.  **Wirelength and area calculation code:**   *calculate_weighted_b2b_wirelength, calculate_weighted_p2b_wirelength* in **cost.py** 
+## 官方參考內容在哪裡
 
-### Dataset Format
+- 目前使用中的官方 contest README： [iccad2026contest/README.md](iccad2026contest/README.md)
+- 完整 upstream 參考樹： `.official-reference/`
+- upstream/worktree 管理方式： [CONTEST_WORKFLOW.md](CONTEST_WORKFLOW.md)
 
-<p align="center">
-  <img src="images/floorset_flow.png" height=300>
-</p>
+## 備註
 
-
-#### Inputs:
-
-- **`area_target:`**  
-  `batch_size x n_blocks`  
-  Area targets for each block.
-
-- **`b2b_connectivity:`**  
-  `batch_size x b2b_edges x edge-weight`  
-  Block-to-block connectivity.
-
-- **`p2b_connectivity:`**  
-  `batch_size x p2b_edges x edge-weight`  
-  Pin-to-block connectivity.
-
-- **`pins_pos:`**  
-  `batch_size x n_pins x 2`  
-  External pins or terminals `(x, y)` locations.
-
-- **`placement_constraints:`**  
-  `batch_size x n_blocks x 5`  
-  Block-wise placement constraints [fixed, preplaced, multi-instantiation, cluster, boundary]:
-  - **Fixed Flag:**  
-    0/1: If 1, the shape should match the target polygon shape. Only the target polygon shape (not the location) should be inferred from the solution. Free to translate or rotate the target shape. 
-  - **Preplaced Flag:**  
-    0/1: If 1, the shape and location should match the target shape. The target polygon shape and location should be inferred from the solution. 
-  - **Multi-instantiation Block (MIB):**  
-    0 if no constraint, otherwise the index indicates the group ID that shares the shape. Each MIB group indicates instantiations of one master partition.  
-    - For example, blocks with index-1 form the first MIB group, and blocks with index-2 form the second MIB group.
-  - **Cluster:**  
-    0 if no constraint, otherwise the index indicates the group ID that needs to be physically clustered (the union of polygons in the cluster should be one continuous polygon).  
-    - For example, blocks with index-1 form the first cluster, and blocks with index-2 form the second cluster.
-  - **Boundary:**  
-    0 if no constraint.
-    - **LEFT:** 1
-    - **RIGHT:** 2
-    - **TOP:** 4
-    - **BOTTOM:** 8
-    - **TOP-LEFT:** 5
-    - **TOP-RIGHT:** 6
-    - **BOTTOM-LEFT:** 9
-    - **BOTTOM-RIGHT:** 10
-
-#### Labels:
-
-- **`sol:`**  
-  `batch_size x n_blocks x vertices x 2`  
-  Polygon shape of each block (target solution) containing a list of polygon vertices for each block.
-  (For FloorSet-Lite, it is batch_size x n_blocks x 4, where we provide [w, h, x, y] for each block. In addition, we also provide the corresponding B*Tree representation.)
-
-- **`metrics:`**  
-  `[area, num_pins, num_total_nets, num_b2b_nets, num_p2b_nets, num_hardconstraints, b2b_weighted_wl, p2b_weighted_wl]`
-  - **area:**  
-    Target layout area of the bounding box.
-  - **num_pins:**  
-    Number of terminals (or pins) in the layout.
-  - **num_total_nets:**  
-    Total number of nets in the circuit.
-  - **num_b2b_nets:**  
-    Number of inter-block nets.
-  - **num_p2b_nets:**  
-    Number of terminal (or pin)-block nets.
-  - **num_hardconstraints:**  
-    Total number of hard constraints (a block can be part of multiple non-conflicting constraints).
-  - **b2b_weighted_wl:**  
-    Inter-block weighted wirelength (center-center Manhattan distance of the net * weight of the net).
-  - **p2b_weighted_wl:**  
-    Pin-block weighted wirelength (center-center Manhattan distance of the net * weight of the net).
-
-
-## Intel Test Dataset
-
-This repository includes a comprehensive Intel test dataset consisting of **200 static test circuits**—**100 FloorSet-Prime test cases** and **100 FloorSet-Lite test cases**—alongside **2 million training samples**. The purpose of this test dataset is to establish a standard validation protocol that is reproducible. To recap, FloorSet-Lite has "rectangular-only" partitions. 
-
-### Dataset Details
-
-- **Test Cases**: Each test case is annotated with placement constraints.
-- **Optimal Metrics**: The optimal metrics for each test case are documented in the following files:
-  - [`intel_testsuite.md`](./intel_testsuite.md)
-  - [`intel_testsuite_lite.md`](./intel_testsuite_lite.md)
-
-### Dataloaders
-
-The dataloaders for these test circuits are implemented in the following Python scripts:
-- `primetestLoader.py`
-- `litetestLoader.py`
-
-
-
-| ![GIF 1](images/test_layouts.gif) | ![GIF 2](images/test_layouts_noconst.gif) |
-|:--------------------------------------------------------------------:|:--------------------------------------------------------------------:|
-| FloorSet-Prime validation benchmarks, with placements and connectivity constraints                                                  | Corresponding layouts (connectivity and placement constraints removed for better visualization)                                                    |
-
-
-## Citation
-
-If you utilize this dataset for training machine learning models or validating floorplanning algorithms, we would appreciate it if you cite our work (https://arxiv.org/abs/2405.05480) [Accepted in ICCAD 2024].
-
-```
-@misc{mallappa2024floorsetvlsifloorplanning,
-      title={FloorSet -- a VLSI Floorplanning Dataset with Design Constraints of Real-World SoCs}, 
-      author={Uday Mallappa and Hesham Mostafa and Mikhail Galkin and Mariano Phielipp and Somdeb Majumdar},
-      year={2024},
-      eprint={2405.05480},
-      archivePrefix={arXiv},
-      primaryClass={cs.AR},
-      url={https://arxiv.org/abs/2405.05480}, 
-}
-```
-
-## License
-
-This repository is released under the Apache-2.0 license. The license can be found in the LICENSE file. The dataset (https://huggingface.co/datasets/IntelLabs/FloorSet) is licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0). 
-
-## Contact
-
-For any questions on the dataset, please email us:.
-
-```
-Uday Mallappa: uday.mallappa@intel.com
-Hesham Mostafa: hesham.mostafa@intel.com
-```
+- 根目錄 README 現在是「你們這份 repo 怎麼用」的說明，不是原始 FloorSet 專案首頁
+- 原始官方內容仍然保留在 upstream 參考樹與 contest 子目錄，不需要再放在根目錄重複展示

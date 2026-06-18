@@ -1,0 +1,44 @@
+{
+  "run_name": "m7_center_baseline",
+  "device": "cuda",
+  "best_val_loss": 0.04152173362672329,
+  "epochs": 5,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.04638792340119835,
+      "val_loss": 0.06204502610489726,
+      "train_samples": 128,
+      "val_samples": 8
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.046201661083614454,
+      "val_loss": 0.06167669128626585,
+      "train_samples": 128,
+      "val_samples": 8
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.04435162994195707,
+      "val_loss": 0.061036712024360895,
+      "train_samples": 128,
+      "val_samples": 8
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.042108678389922716,
+      "val_loss": 0.05077264131978154,
+      "train_samples": 128,
+      "val_samples": 8
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.037595980102196336,
+      "val_loss": 0.04152173362672329,
+      "train_samples": 128,
+      "val_samples": 8
+    }
+  ],
+  "best_checkpoint": "/home/college_lab/lab2026/s112501549/cad2026/problem_c_work/checkpoints/ml/m7_center_baseline_best.pt"
+}

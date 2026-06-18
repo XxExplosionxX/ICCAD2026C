@@ -42,6 +42,13 @@ contest_venv/
 # Results and logs (optional - contestants may want to track these)
 *_results.json
 *.log
+*_debug_breakdown.csv
+*_solutions.json
+validation_case_*.png
+
+# problem_c_work local artifacts
+problem_c_work/**/__pycache__/
+problem_c_work/artifacts/tmp/
 
 # OS
 .DS_Store
